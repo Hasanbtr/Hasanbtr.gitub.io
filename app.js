@@ -1,14 +1,15 @@
 document.addEventListener('DOMContentLoaded', function() {
     const db = firebase.firestore();
-    const productsContainer = document.getElementById('products');
+    const productsContainer = document.getElementById('product-list');
     const cartItemsContainer = document.getElementById('cart-items');
     let cart = [];
 
-    // Firestore'dan ürünleri çek
-    db.collection('products').get().then((querySnapshot) => {
+    // Firestore'dan ürünleri çek ve fiyata göre sırala
+    db.collection('products').orderBy('price').get().then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
             const product = doc.data();
             const productElement = document.createElement('div');
+            productElement.classList.add('product-item');
             productElement.innerHTML = `
                 <h3>${product.name}</h3>
                 <p>${product.description}</p>
