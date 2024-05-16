@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Profil</title>
+  <title>Profile</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -10,7 +10,7 @@
       padding: 20px;
     }
     .container {
-      max-width: 600px;
+      max-width: 400px;
       margin: 0 auto;
       background: #fff;
       padding: 20px;
@@ -18,132 +18,105 @@
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
     .form-group {
-      margin-bottom: 20px;
+      margin-bottom: 15px;
     }
     .form-group label {
       display: block;
       margin-bottom: 5px;
     }
-    .form-group input, .form-group textarea {
+    .form-group input {
       width: 100%;
       padding: 10px;
       border: 1px solid #ddd;
       border-radius: 5px;
     }
     .form-group button {
-      padding: 10px 20px;
+      width: 100%;
+      padding: 10px;
+      background-color: green;
+      color: white;
       border: none;
-      background: green;
-      color: #fff;
-      cursor: pointer;
       border-radius: 5px;
+      cursor: pointer;
     }
     .form-group button:hover {
-      background: darkgreen;
-    }
-    .store {
-      border: 1px solid #ddd;
-      padding: 10px;
-      border-radius: 5px;
-      margin-bottom: 10px;
+      background-color: darkgreen;
     }
   </style>
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js"></script>
 </head>
 <body>
   <div class="container">
-    <h1>Profil</h1>
-
-    <div id="profile-info">
-      <!-- Kullanıcı bilgileri buraya eklenecek -->
+    <h2>Sign Up</h2>
+    <div class="form-group">
+      <label for="email-signup">Email</label>
+      <input type="email" id="email-signup">
+    </div>
+    <div class="form-group">
+      <label for="password-signup">Password</label>
+      <input type="password" id="password-signup">
+    </div>
+    <div class="form-group">
+      <button onclick="signUp()">Sign Up</button>
     </div>
 
-    <div id="auth-container">
-      <h2>Giriş Yap</h2>
-      <input type="email" id="email-login" placeholder="Email">
-      <input type="password" id="password-login" placeholder="Password">
-      <button onclick="login()">Giriş Yap</button>
-
-      <h2>Kayıt Ol</h2>
-      <input type="email" id="email-signup" placeholder="Email">
-      <input type="password" id="password-signup" placeholder="Password">
-      <button onclick="signUp()">Kayıt Ol</button>
+    <h2>Login</h2>
+    <div class="form-group">
+      <label for="email-login">Email</label>
+      <input type="email" id="email-login">
     </div>
-
-    <div id="profile-container" style="display: none;">
-      <div class="form-group">
-        <label for="store-name">Dükkan Adı</label>
-        <input type="text" id="store-name">
-      </div>
-      <div class="form-group">
-        <label for="store-description">Dükkan Açıklaması</label>
-        <textarea id="store-description"></textarea>
-      </div>
-      <div class="form-group">
-        <button onclick="addStore()">Dükkan Ekle</button>
-      </div>
-      <h2>Kayıtlı Dükkanlar</h2>
-      <div id="store-list">
-        <!-- Dükkanlar buraya eklenecek -->
-      </div>
-      <button onclick="logout()">Çıkış Yap</button>
+    <div class="form-group">
+      <label for="password-login">Password</label>
+      <input type="password" id="password-login">
     </div>
-
+    <div class="form-group">
+      <button onclick="login()">Login</button>
+    </div>
   </div>
 
   <script>
+    // Firebase config
     const firebaseConfig = {
-      apiKey: "AIzaSyCnRCZAhDH-tyZ0kUSrqY7fR8SZZVI-jbo",
-      authDomain: "users-c034d.firebaseapp.com",
-      projectId: "users-c034d",
-      storageBucket: "users-c034d.appspot.com",
-      messagingSenderId: "973151156222",
-      appId: "1:973151156222:web:d76de321a96aadf353f2af",
-      measurementId: "G-7LX396W882"
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID",
+      measurementId: "YOUR_MEASUREMENT_ID"
     };
 
+    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    // Kullanıcı oturum açma durumu izleme
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        console.log("User logged in: ", user.email);
-        document.getElementById("auth-container").style.display = "none";
-        document.getElementById("profile-container").style.display = "block";
-        loadProfile(user);
-        loadStores(user);
-      } else {
-        document.getElementById("auth-container").style.display = "block";
-        document.getElementById("profile-container").style.display = "none";
-      }
-    });
-
-    // Kayıt olma fonksiyonu
+    // Sign Up function
     function signUp() {
       const email = document.getElementById("email-signup").value;
       const password = document.getElementById("password-signup").value;
-
+      
       auth.createUserWithEmailAndPassword(email, password)
         .then((userCredential) => {
           const user = userCredential.user;
-          console.log("User signed up: ", user.email);
+          console.log("User signed up:", user.email);
           db.collection("users").doc(user.uid).set({
             email: user.email,
             createdAt: new Date()
           }).then(() => {
-            window.location.reload();
+            alert("User registered successfully");
           });
         })
         .catch((error) => {
-          console.error("Error signing up: ", error.code, error.message);
+          console.error("Error signing up:", error.code, error.message);
+          alert(error.message);
         });
     }
 
-    // Giriş yapma fonksiyonu
+    // Login function
     function login() {
       const email = document.getElementById("email-login").value;
       const password = document.getElementById("password-login").value;
@@ -151,90 +124,15 @@
       auth.signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
           const user = userCredential.user;
-          console.log("User logged in: ", user.email);
-          window.location.reload();
+          console.log("User logged in:", user.email);
+          alert("User logged in successfully");
+          window.location.href = "index.html";
         })
         .catch((error) => {
-          console.error("Error logging in: ", error.code, error.message);
-        });
-    }
-
-    // Profil yükleme
-    async function loadProfile(user)
-        async function loadProfile(user) {
-      const profileInfo = document.getElementById("profile-info");
-      const docRef = db.collection("users").doc(user.uid);
-      const docSnap = await docRef.get();
-
-      if (docSnap.exists) {
-        const userData = docSnap.data();
-        profileInfo.innerHTML = `
-          <p>Email: ${userData.email}</p>
-          <p>Oluşturulma Tarihi: ${userData.createdAt.toDate()}</p>
-        `;
-      } else {
-        console.log("No such document!");
-      }
-    }
-
-    // Dükkan ekleme fonksiyonu
-    function addStore() {
-      const storeName = document.getElementById("store-name").value;
-      const storeDescription = document.getElementById("store-description").value;
-      const user = auth.currentUser;
-
-      if (user) {
-        db.collection("stores").add({
-          userId: user.uid,
-          name: storeName,
-          description: storeDescription,
-          createdAt: new Date()
-        })
-        .then(() => {
-          console.log("Store added successfully!");
-          loadStores(user);  // Yeni eklenen dükkanı listelemek için tekrar yükle
-        })
-        .catch((error) => {
-          console.error("Error adding store: ", error);
-        });
-      }
-    }
-
-    // Dükkanları yükleme fonksiyonu
-    function loadStores(user) {
-      const storeList = document.getElementById("store-list");
-      storeList.innerHTML = ""; // Mevcut listeyi temizle
-
-      db.collection("stores").where("userId", "==", user.uid).get()
-        .then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            const store = doc.data();
-            const storeDiv = document.createElement("div");
-            storeDiv.className = "store";
-            storeDiv.innerHTML = `
-              <h3>${store.name}</h3>
-              <p>${store.description}</p>
-            `;
-            storeList.appendChild(storeDiv);
-          });
-        })
-        .catch((error) => {
-          console.error("Error loading stores: ", error);
-        });
-    }
-
-    // Çıkış yapma fonksiyonu
-    function logout() {
-      auth.signOut()
-        .then(() => {
-          console.log("User logged out");
-          window.location.reload();
-        })
-        .catch((error) => {
-          console.error("Error logging out: ", error);
+          console.error("Error logging in:", error.code, error.message);
+          alert(error.message);
         });
     }
   </script>
 </body>
 </html>
-
