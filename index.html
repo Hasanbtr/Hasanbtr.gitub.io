@@ -52,7 +52,33 @@
     appId: "1:973151156222:web:d76de321a96aadf353f2af",
     measurementId: "G-7LX396W882"
   };
-    
+  
+
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    function loadProducts() {
+      const productList = document.getElementById("product-list");
+      db.collection("products").get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          const product = doc.data();
+          const productCard = document.createElement("div");
+          productCard.className = "product-card";
+          productCard.innerHTML = `
+            <img src="${product.imageUrl}" alt="${product.name}">
+            <h3>${product.name}</h3>
+            <p>${product.description}</p>
+            <p>Fiyat: ${product.price} TL</p>
+          `;
+          productList.appendChild(productCard);
+        });
+      });
+    }
+
+    window.onload = loadProducts;
   </script>
 </body>
 </html>
+
+  
