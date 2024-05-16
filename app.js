@@ -29,6 +29,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 updateCart();
             }
         });
+    }).catch(error => {
+        console.error('Error getting products:', error);
     });
 
     function updateCart() {
