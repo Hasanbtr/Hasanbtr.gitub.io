@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Telefon Listesi</title>
+  <title>Telefon Listesi ve Dükkan Açma</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -37,12 +37,62 @@
       font-size: 18px;
       margin: 0 15px 15px;
     }
+    .store-form {
+      background-color: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .store-form h2 {
+      margin-top: 0;
+    }
+    .store-form input, .store-form button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
+    .store-form button {
+      background-color: green;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .store-form button:hover {
+      background-color: darkgreen;
+    }
+    .store-container {
+      margin-top: 20px;
+    }
+    .store {
+      background-color: white;
+      border-radius: 5px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
   </style>
 </head>
 <body>
   <h1>Telefon Listesi</h1>
   <div class="container" id="phone-list">
     <!-- Telefon kartları buraya eklenecek -->
+  </div>
+
+  <h1>Dükkan Açma</h1>
+  <div class="store-form">
+    <h2>Yeni Dükkan Aç</h2>
+    <input type="text" id="store-name" placeholder="Dükkan Adı">
+    <input type="text" id="store-description" placeholder="Dükkan Açıklaması">
+    <button onclick="addStore()">Dükkan Ekle</button>
+  </div>
+
+  <h1>Kayıtlı Dükkanlar</h1>
+  <div class="store-container" id="store-list">
+    <!-- Dükkanlar buraya eklenecek -->
   </div>
 
   <script>
@@ -82,6 +132,29 @@
       `;
       phoneList.appendChild(card);
     });
+
+    // Dükkan ekleme fonksiyonu
+    function addStore() {
+      const storeName = document.getElementById("store-name").value;
+      const storeDescription = document.getElementById("store-description").value;
+
+      if (storeName && storeDescription) {
+        const storeList = document.getElementById("store-list");
+        const storeDiv = document.createElement("div");
+        storeDiv.className = "store";
+        storeDiv.innerHTML = `
+          <h2>${storeName}</h2>
+          <p>${storeDescription}</p>
+        `;
+        storeList.appendChild(storeDiv);
+
+        // Formu temizle
+        document.getElementById("store-name").value = "";
+        document.getElementById("store-description").value = "";
+      } else {
+        alert("Lütfen tüm alanları doldurun!");
+      }
+    }
   </script>
 </body>
 </html>
