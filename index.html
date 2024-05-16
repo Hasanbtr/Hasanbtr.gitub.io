@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookstore</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .book-card {
+            width: calc(33.33% - 20px);
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease-in-out;
+        }
+        .book-card:hover {
+            transform: translateY(-5px);
+        }
+        .book-img {
+            width: 100%;
+            height: auto;
+        }
+        .book-info {
+            padding: 10px;
+        }
+        .book-title {
+            font-size: 1.2em;
+            margin-bottom: 3px;
+        }
+        .book-author {
+            font-style: italic;
+            color: #666;
+            margin-bottom: 0;
+        }
+        .book-action-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 5px;
+        }
+        .book-action {
+            text-align: center;
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease-in-out;
+        }
+        .book-action:hover {
+            background-color: #0056b3;
+        }
+        .profile-btn-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+        }
+        .profile-btn {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s ease-in-out;
+        }
+        .profile-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Bookstore</h1>
+    <div class="profile-btn-container">
+        <a href="/profile" class="profile-btn">Profile</a>
+    </div>
+    <div class="container">
+        {% for book in books %}
+        <div class="book-card">
+            <img class="book-img" src="{{ book.cover }}" alt="Book Cover">
+            <div class="book-info">
+                <h2 class="book-title">{{ book.title }}</h2>
+                <p class="book-author">{{ book.author }}</p>
+                <div class="book-action-container">
+                    <a href="/details/{{ book.id }}" class="book-action">Details</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <a href="/add_book">Add Book</a>
+</body>
+</html>
