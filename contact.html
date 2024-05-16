@@ -8,16 +8,20 @@
 <body>
     <h1>Contact Us</h1>
     <form name="contact" method="POST" data-netlify="true">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required>
-        
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
-        
-        <label for="message">Message:</label>
-        <textarea id="message" name="message" required></textarea>
-        
-        <button type="submit">Send</button>
-    </form>
+<form name="contact" method="POST" data-netlify="true" data-netlify-recaptcha="true">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required>
+    
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+    
+    <label for="message">Message:</label>
+    <textarea id="message" name="message" required></textarea>
+    
+    <div data-netlify-recaptcha="true"></div>
+    
+    <button type="submit">Send</button>
+</form>
+
 </body>
 </html>
