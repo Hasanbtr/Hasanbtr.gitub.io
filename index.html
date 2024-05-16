@@ -95,6 +95,11 @@
     <!-- Dükkanlar buraya eklenecek -->
   </div>
 
+  <h1>Tüm Ürünler</h1>
+  <div class="container" id="all-products-list">
+    <!-- Tüm ürünler buraya eklenecek -->
+  </div>
+
   <script>
     // Telefon verileri
     const phones = [
@@ -187,6 +192,18 @@
         document.getElementById(`product-name-${storeId}`).value = "";
         document.getElementById(`product-description-${storeId}`).value = "";
         document.getElementById(`product-price-${storeId}`).value = "";
+
+        // Ana sayfada ürünü göster
+        const allProductsList = document.getElementById("all-products-list");
+        const productCard = document.createElement("div");
+        productCard.className = "card";
+        productCard.innerHTML = `
+          <img src="https://via.placeholder.com/300" alt="${productName}">
+          <h2>${productName}</h2>
+          <p>${productDescription}</p>
+          <p class="price">${productPrice}</p>
+        `;
+        allProductsList.appendChild(productCard);
       } else {
         alert("Lütfen tüm ürün alanlarını doldurun!");
       }
