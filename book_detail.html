@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Detail</title>
+</head>
+<body>
+    <h1>Book Detail</h1>
+    <p><strong>Title:</strong> {{ book.title }}</p>
+    <p><strong>Author:</strong> {{ book.author }}</p>
+    
+    <!-- Kitap kapak resmi -->
+    {% if cover_url %}
+    <img src="{{ cover_url }}" alt="Book Cover">
+    {% endif %}
+
+    <!-- Delete button -->
+    <form action="/delete/{{ book.id }}" method="post" style="display: inline;">
+        <button type="submit">Delete</button>
+    </form>
+
+    <!-- Update button -->
+    <a href="/update/{{ book.id }}"><button type="button">Update</button></a>
+</body>
+</html>
