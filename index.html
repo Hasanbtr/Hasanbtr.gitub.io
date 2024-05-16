@@ -1,212 +1,74 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Telefon Listesi ve Dükkan Açma</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      margin: 0;
-      padding: 20px;
-    }
-    .container {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-    }
-    .card {
-      background-color: white;
-      border-radius: 5px;
-      overflow: hidden;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-    .card img {
-      width: 100%;
-      display: block;
-    }
-    .card h2 {
-      font-size: 20px;
-      margin: 15px;
-    }
-    .card p {
-      color: #555;
-      margin: 0 15px 15px;
-    }
-    .card .price {
-      color: green;
-      font-size: 18px;
-      margin: 0 15px 15px;
-    }
-    .store-form, .product-form {
-      background-color: white;
-      padding: 20px;
-      margin-bottom: 20px;
-      border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-    .store-form h2, .product-form h2 {
-      margin-top: 0;
-    }
-    .store-form input, .store-form button, .product-form input, .product-form button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      margin-bottom: 20px;
-      border-radius: 5px;
-      border: 1px solid #ddd;
-    }
-    .store-form button, .product-form button {
-      background-color: green;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    .store-form button:hover, .product-form button:hover {
-      background-color: darkgreen;
-    }
-    .store-container, .product-list {
-      margin-top: 20px;
-    }
-    .store, .product {
-      background-color: white;
-      border-radius: 5px;
-      padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-  </style>
+  <title>Giriş/Kayıt</title>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js"></script>
 </head>
 <body>
-  <h1>Telefon Listesi</h1>
-  <div class="container" id="phone-list">
-    <!-- Telefon kartları buraya eklenecek -->
-  </div>
+  <h1>Giriş Yap</h1>
+  <input type="email" id="email-login" placeholder="Email">
+  <input type="password" id="password-login" placeholder="Password">
+  <button onclick="login()">Giriş Yap</button>
 
-  <h1>Dükkan Açma</h1>
-  <div class="store-form">
-    <h2>Yeni Dükkan Aç</h2>
-    <input type="text" id="store-name" placeholder="Dükkan Adı">
-    <input type="text" id="store-description" placeholder="Dükkan Açıklaması">
-    <button onclick="addStore()">Dükkan Ekle</button>
-  </div>
+  <h1>Kayıt Ol</h1>
+  <input type="email" id="email-signup" placeholder="Email">
+  <input type="password" id="password-signup" placeholder="Password">
+  <button onclick="signUp()">Kayıt Ol</button>
 
-  <h1>Kayıtlı Dükkanlar</h1>
-  <div class="store-container" id="store-list">
-    <!-- Dükkanlar buraya eklenecek -->
-  </div>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+    import { getFirestore, collection, addDoc, getDoc, setDoc, doc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
 
-  <h1>Tüm Ürünler</h1>
-  <div class="container" id="all-products-list">
-    <!-- Tüm ürünler buraya eklenecek -->
-  </div>
+    const firebaseConfig = {
+      apiKey: "API_KEY",
+      authDomain: "PROJECT_ID.firebaseapp.com",
+      projectId: "PROJECT_ID",
+      storageBucket: "PROJECT_ID.appspot.com",
+      messagingSenderId: "SENDER_ID",
+      appId: "APP_ID",
+      measurementId: "MEASUREMENT_ID"
+    };
 
-  <script>
-    // Telefon verileri
-    const phones = [
-      {
-        name: "Samsung Galaxy S21",
-        image: "https://via.placeholder.com/300",
-        description: "Samsung'un en yeni amiral gemisi modeli.",
-        price: "₺7000"
-      },
-      {
-        name: "iPhone 13",
-        image: "https://via.placeholder.com/300",
-        description: "Apple'ın en yeni iPhone modeli.",
-        price: "₺10000"
-      },
-      {
-        name: "Xiaomi Mi 11",
-        image: "https://via.placeholder.com/300",
-        description: "Xiaomi'nin en yeni modeli, uygun fiyatlı.",
-        price: "₺5000"
-      }
-    ];
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-    // Telefon kartlarını oluşturma
-    const phoneList = document.getElementById("phone-list");
+    function signUp() {
+      const email = document.getElementById("email-signup").value;
+      const password = document.getElementById("password-signup").value;
 
-    phones.forEach(phone => {
-      const card = document.createElement("div");
-      card.className = "card";
-      card.innerHTML = `
-        <img src="${phone.image}" alt="${phone.name}">
-        <h2>${phone.name}</h2>
-        <p>${phone.description}</p>
-        <p class="price">${phone.price}</p>
-      `;
-      phoneList.appendChild(card);
-    });
-
-    // Dükkan ekleme fonksiyonu
-    function addStore() {
-      const storeName = document.getElementById("store-name").value;
-      const storeDescription = document.getElementById("store-description").value;
-
-      if (storeName && storeDescription) {
-        const storeList = document.getElementById("store-list");
-        const storeDiv = document.createElement("div");
-        storeDiv.className = "store";
-        storeDiv.innerHTML = `
-          <h2>${storeName}</h2>
-          <p>${storeDescription}</p>
-          <div class="product-list" id="product-list-${storeName.replace(/\s+/g, '-').toLowerCase()}">
-            <!-- Ürünler buraya eklenecek -->
-          </div>
-          <div class="product-form">
-            <h3>Yeni Ürün Ekle</h3>
-            <input type="text" placeholder="Ürün Adı" id="product-name-${storeName.replace(/\s+/g, '-').toLowerCase()}">
-            <input type="text" placeholder="Ürün Açıklaması" id="product-description-${storeName.replace(/\s+/g, '-').toLowerCase()}">
-            <input type="text" placeholder="Ürün Fiyatı" id="product-price-${storeName.replace(/\s+/g, '-').toLowerCase()}">
-            <button onclick="addProduct('${storeName.replace(/\s+/g, '-').toLowerCase()}')">Ürün Ekle</button>
-          </div>
-        `;
-        storeList.appendChild(storeDiv);
-
-        // Formu temizle
-        document.getElementById("store-name").value = "";
-        document.getElementById("store-description").value = "";
-      } else {
-        alert("Lütfen tüm alanları doldurun!");
-      }
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          console.log("User signed up: ", user.email);
+          setDoc(doc(db, "users", user.uid), {
+            email: user.email,
+            createdAt: new Date()
+          }).then(() => {
+            window.location.href = "profile.html";
+          });
+        })
+        .catch((error) => {
+          console.error("Error signing up: ", error.code, error.message);
+        });
     }
 
-    // Ürün ekleme fonksiyonu
-    function addProduct(storeId) {
-      const productName = document.getElementById(`product-name-${storeId}`).value;
-      const productDescription = document.getElementById(`product-description-${storeId}`).value;
-      const productPrice = document.getElementById(`product-price-${storeId}`).value;
+    function login() {
+      const email = document.getElementById("email-login").value;
+      const password = document.getElementById("password-login").value;
 
-      if (productName && productDescription && productPrice) {
-        const productList = document.getElementById(`product-list-${storeId}`);
-        const productDiv = document.createElement("div");
-        productDiv.className = "product";
-        productDiv.innerHTML = `
-          <h3>${productName}</h3>
-          <p>${productDescription}</p>
-          <p class="price">${productPrice}</p>
-        `;
-        productList.appendChild(productDiv);
-
-        // Ürün formunu temizle
-        document.getElementById(`product-name-${storeId}`).value = "";
-        document.getElementById(`product-description-${storeId}`).value = "";
-        document.getElementById(`product-price-${storeId}`).value = "";
-
-        // Ana sayfada ürünü göster
-        const allProductsList = document.getElementById("all-products-list");
-        const productCard = document.createElement("div");
-        productCard.className = "card";
-        productCard.innerHTML = `
-          <img src="https://via.placeholder.com/300" alt="${productName}">
-          <h2>${productName}</h2>
-          <p>${productDescription}</p>
-          <p class="price">${productPrice}</p>
-        `;
-        allProductsList.appendChild(productCard);
-      } else {
-        alert("Lütfen tüm ürün alanlarını doldurun!");
-      }
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          console.log("User logged in: ", user.email);
+          window.location.href = "profile.html";
+        })
+        .catch((error) => {
+          console.error("Error logging in: ", error.code, error.message);
+        });
     }
   </script>
 </body>
