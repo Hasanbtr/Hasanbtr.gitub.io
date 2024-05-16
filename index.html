@@ -63,6 +63,7 @@
       db.collection("products").get().then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
           const product = doc.data();
+          console.log(product);
           const productCard = document.createElement("div");
           productCard.className = "product-card";
           productCard.innerHTML = `
