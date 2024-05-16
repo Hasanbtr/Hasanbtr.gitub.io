@@ -161,7 +161,7 @@
 
     // Profil yükleme
     async function loadProfile(user)
-    async function loadProfile(user) {
+        async function loadProfile(user) {
       const profileInfo = document.getElementById("profile-info");
       const docRef = db.collection("users").doc(user.uid);
       const docSnap = await docRef.get();
@@ -237,3 +237,4 @@
   </script>
 </body>
 </html>
+
