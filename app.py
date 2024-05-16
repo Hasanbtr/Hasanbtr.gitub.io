@@ -4,59 +4,13 @@ import sqlite3
 import requests
 
 app = Flask(__name__)
-# Oturumlar için gizli anahtar belirleme
-app.secret_key = os.urandom(24)  # Rastgele bir 24 baytlık gizli anahtar oluşturur
 
-# SQLite veritabanına bağlantı oluştur
-def get_db():
-    if 'db' not in g:
-        g.db = sqlite3.connect('database.db')
-    return g.db
-
-@app.teardown_appcontext
-def close_db(error):
-    if hasattr(g, 'db'):
-        g.db.close()
-
-# Google Books API'den kitap kapaklarını alacak fonksiyon
-def get_book_cover(book_title):
-    # Google Books API kullanarak kitap kapaklarını al
-    url = f"https://www.googleapis.com/books/v1/volumes?q={book_title}&maxResults=1"
-    response = requests.get(url)
-    data = response.json()
-
-    # İlk kitabın kapak resmini al
-    if 'items' in data and len(data['items']) > 0:
-        volume_info = data['items'][0]['volumeInfo']
-        if 'imageLinks' in volume_info:
-            cover_url = volume_info['imageLinks']['thumbnail']
-            return cover_url
-
-    return None
 
 # Ana sayfa
 @app.route('/')
 def index():
-    # Veritabanından tüm kitapları al
-    db = get_db()
-    cursor = db.cursor()
-    cursor.execute("SELECT * FROM books")
-    books_data = cursor.fetchall()
-
-    # Kitap verilerini sözlük listesi olarak dönüştür
-    books = []
-    for book_data in books_data:
-        book = {
-            'id': book_data[0],
-            'title': book_data[1],
-            'author': book_data[2],
-            'cover': get_book_cover(book_data[1]),  # Kitap başlığını parametre olarak kullanarak kapak al
-            # Diğer sütunlar buraya eklenebilir
-        }
-        books.append(book)
-
     # Kitapları ana sayfaya gönder
-    return render_template('index.html', books=books)
+    return render_template('index.html')
 
 # Üyelik sayfası
 @app.route('/register', methods=['GET', 'POST'])
