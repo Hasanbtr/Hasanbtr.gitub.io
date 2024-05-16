@@ -1,90 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-        .profile-container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-        }
-        .profile-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .profile-avatar {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            border: 3px solid #007bff;
-            margin-bottom: 10px;
-            object-fit: cover;
-        }
-        .profile-name {
-            font-size: 1.5em;
-            margin-bottom: 5px;
-        }
-        .profile-email {
-            color: #666;
-            margin-bottom: 20px;
-        }
-        .profile-info {
-            margin-bottom: 20px;
-        }
-        .profile-info h3 {
-            margin-bottom: 10px;
-        }
-        .profile-info p {
-            margin-bottom: 5px;
-        }
-        .profile-action {
-            text-align: center;
-        }
-        .profile-action button {
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease-in-out;
-        }
-        .profile-action button:hover {
-            background-color: #0056b3;
-        }
-    </style>
-</head>
 <body>
-    <div class="profile-container">
-        <div class="profile-header">
-            <img class="profile-avatar" src="avatar.jpg" alt="Avatar">
-            <h1 class="profile-name">John Doe</h1>
-            <p class="profile-email">john@example.com</p>
-        </div>
-        <div class="profile-info">
-            <h3>About Me</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod lobortis nulla, non efficitur elit tincidunt a. Nulla facilisi.</p>
-        </div>
-        <div class="profile-info">
-            <h3>Contact Information</h3>
-            <p>Email: john@example.com</p>
-            <p>Phone: +1234567890</p>
-        </div>
-        <div class="profile-action">
-            <button>Edit Profile</button>
-        </div>
+    <h1>Bookstore</h1>
+    <div class="profile-btn-container">
+        <a href="profile.html" class="profile-btn">Profile</a>
     </div>
+    <div class="container" id="book-container">
+        <!-- Kitap kartları burada oluşturulacak -->
+    </div>
+    <a href="add_book.html">Add Book</a>
+
+    <!-- Kullanıcı kaydı formu -->
+    <div>
+        <h2>Sign Up</h2>
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="signUp()">Sign Up</button>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
+    <script>
+        // Firebase projesi yapılandırma
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Firebase'i başlat
+        firebase.initializeApp(firebaseConfig);
+
+        // Authentication referansı
+        const auth = firebase.auth();
+
+        // Kullanıcı kaydı fonksiyonu
+        function signUp() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            auth.createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    console.log('User signed up:', userCredential.user);
+                })
+                .catch((error) => {
+                    console.error('Error signing up:', error);
+                });
+        }
+    </script>
 </body>
 </html>
