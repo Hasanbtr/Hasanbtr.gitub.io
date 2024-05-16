@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+bu<!DOCTYPE html>
 <html>
 <head>
   <title>Ana Sayfa</title>
@@ -54,25 +54,7 @@
   };
 
     firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-
-    function loadProducts() {
-      const productList = document.getElementById("product-list");
-      db.collection("products").get().then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          const product = doc.data();
-          const productCard = document.createElement("div");
-          productCard.className = "product-card";
-          productCard.innerHTML = `
-            <img src="${product.imageUrl}" alt="${product.name}">
-            <h3>${product.name}</h3>
-            <p>${product.description}</p>
-            <p>Fiyat: ${product.price} TL</p>
-          `;
-          productList.appendChild(productCard);
-        });
-      });
-    }
+    
 
     window.onload = loadProducts;
   </script>
