@@ -1,55 +1,89 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bookstore</title>
-    <style>
-        /* CSS kodlarınız burada kalacak */
-    </style>
+  <title>Telefon Listesi</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+    }
+    .card {
+      background-color: white;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      width: 300px;
+      margin: 20px;
+      padding: 15px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    .card img {
+      max-width: 100%;
+      border-radius: 5px 5px 0 0;
+    }
+    .card h2 {
+      font-size: 20px;
+      margin: 15px 0 10px;
+    }
+    .card p {
+      color: #555;
+    }
+    .card .price {
+      color: green;
+      font-size: 18px;
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
-    <h1>Bookstore</h1>
-    <div class="profile-btn-container">
-        <a href="profile.html" class="profile-btn">Profile</a>
-    </div>
-    <div class="container" id="book-container">
-        <!-- Kitap kartları burada oluşturulacak -->
-    </div>
-    <a href="add_book.html">Add Book</a>
+  <h1>Telefon Listesi</h1>
+  <div class="container" id="phone-list">
+    <!-- Telefon kartları buraya eklenecek -->
+  </div>
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
-    <script>
-        // Firebase projesi yapılandırma
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT_ID.appspot.com",
-            messagingSenderId: "YOUR_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
+  <script>
+    // Telefon verileri
+    const phones = [
+      {
+        name: "Samsung Galaxy S21",
+        image: "https://via.placeholder.com/300",
+        description: "Samsung'un en yeni amiral gemisi modeli.",
+        price: "₺7000"
+      },
+      {
+        name: "iPhone 13",
+        image: "https://via.placeholder.com/300",
+        description: "Apple'ın en yeni iPhone modeli.",
+        price: "₺10000"
+      },
+      {
+        name: "Xiaomi Mi 11",
+        image: "https://via.placeholder.com/300",
+        description: "Xiaomi'nin en yeni modeli, uygun fiyatlı.",
+        price: "₺5000"
+      }
+    ];
 
-        // Firebase'i başlat
-        firebase.initializeApp(firebaseConfig);
+    // Telefon kartlarını oluşturma
+    const phoneList = document.getElementById("phone-list");
 
-        // Authentication referansı
-        const auth = firebase.auth();
-
-        // Kullanıcı kaydı fonksiyonu
-        function signUp() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            auth.createUserWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    console.log('User signed up:', userCredential.user);
-                })
-                .catch((error) => {
-                    console.error('Error signing up:', error);
-                });
-        }
-    </script>
+    phones.forEach(phone => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <img src="${phone.image}" alt="${phone.name}">
+        <h2>${phone.name}</h2>
+        <p>${phone.description}</p>
+        <p class="price">${phone.price}</p>
+      `;
+      phoneList.appendChild(card);
+    });
+  </script>
 </body>
 </html>
