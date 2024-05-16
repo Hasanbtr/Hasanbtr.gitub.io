@@ -1,44 +1,17 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const db = firebase.firestore();
-    const productsContainer = document.getElementById('product-list');
-    const cartItemsContainer = document.getElementById('cart-items');
-    let cart = [];
+document.getElementById('run-query').addEventListener('click', async () => {
+    const SQL = await initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.6.2/${file}` });
 
-    // Firestore'dan ürünleri çek ve fiyata göre sırala
-    db.collection('products').orderBy('price').get().then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            const product = doc.data();
-            const productElement = document.createElement('div');
-            productElement.classList.add('product-item');
-            productElement.innerHTML = `
-                <h3>${product.name}</h3>
-                <p>${product.description}</p>
-                <p>Price: $${product.price}</p>
-                <button data-id="${doc.id}">Add to Cart</button>
-            `;
-            productsContainer.appendChild(productElement);
-        });
+    // Yeni bir veritabanı oluştur
+    const db = new SQL.Database();
 
-        // Sepete ekleme işlemi
-        productsContainer.addEventListener('click', (e) => {
-            if (e.target.tagName === 'BUTTON') {
-                const productId = e.target.getAttribute('data-id');
-                const productDoc = querySnapshot.docs.find(doc => doc.id === productId);
-                const product = productDoc.data();
-                cart.push(product);
-                updateCart();
-            }
-        });
-    }).catch(error => {
-        console.error('Error getting products:', error);
-    });
+    // Basit bir tablo oluştur ve veri ekle
+    db.run("CREATE TABLE test (col1, col2);");
+    db.run("INSERT INTO test VALUES (?, ?), (?, ?)", [1, 'foo', 2, 'bar']);
 
-    function updateCart() {
-        cartItemsContainer.innerHTML = '';
-        cart.forEach((item, index) => {
-            const cartItem = document.createElement('li');
-            cartItem.textContent = `${item.name} - $${item.price}`;
-            cartItemsContainer.appendChild(cartItem);
-        });
-    }
+    // Veriyi sorgula
+    const res = db.exec("SELECT * FROM test");
+    document.getElementById('output').textContent = JSON.stringify(res, null, 2);
+
+    // Veritabanını kapat
+    db.close();
 });
