@@ -37,17 +37,17 @@
       font-size: 18px;
       margin: 0 15px 15px;
     }
-    .store-form {
+    .store-form, .product-form {
       background-color: white;
       padding: 20px;
       margin-bottom: 20px;
       border-radius: 5px;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
-    .store-form h2 {
+    .store-form h2, .product-form h2 {
       margin-top: 0;
     }
-    .store-form input, .store-form button {
+    .store-form input, .store-form button, .product-form input, .product-form button {
       width: 100%;
       padding: 10px;
       margin-top: 10px;
@@ -55,19 +55,19 @@
       border-radius: 5px;
       border: 1px solid #ddd;
     }
-    .store-form button {
+    .store-form button, .product-form button {
       background-color: green;
       color: white;
       border: none;
       cursor: pointer;
     }
-    .store-form button:hover {
+    .store-form button:hover, .product-form button:hover {
       background-color: darkgreen;
     }
-    .store-container {
+    .store-container, .product-list {
       margin-top: 20px;
     }
-    .store {
+    .store, .product {
       background-color: white;
       border-radius: 5px;
       padding: 20px;
@@ -145,6 +145,16 @@
         storeDiv.innerHTML = `
           <h2>${storeName}</h2>
           <p>${storeDescription}</p>
+          <div class="product-list" id="product-list-${storeName.replace(/\s+/g, '-').toLowerCase()}">
+            <!-- Ürünler buraya eklenecek -->
+          </div>
+          <div class="product-form">
+            <h3>Yeni Ürün Ekle</h3>
+            <input type="text" placeholder="Ürün Adı" id="product-name-${storeName.replace(/\s+/g, '-').toLowerCase()}">
+            <input type="text" placeholder="Ürün Açıklaması" id="product-description-${storeName.replace(/\s+/g, '-').toLowerCase()}">
+            <input type="text" placeholder="Ürün Fiyatı" id="product-price-${storeName.replace(/\s+/g, '-').toLowerCase()}">
+            <button onclick="addProduct('${storeName.replace(/\s+/g, '-').toLowerCase()}')">Ürün Ekle</button>
+          </div>
         `;
         storeList.appendChild(storeDiv);
 
@@ -153,6 +163,32 @@
         document.getElementById("store-description").value = "";
       } else {
         alert("Lütfen tüm alanları doldurun!");
+      }
+    }
+
+    // Ürün ekleme fonksiyonu
+    function addProduct(storeId) {
+      const productName = document.getElementById(`product-name-${storeId}`).value;
+      const productDescription = document.getElementById(`product-description-${storeId}`).value;
+      const productPrice = document.getElementById(`product-price-${storeId}`).value;
+
+      if (productName && productDescription && productPrice) {
+        const productList = document.getElementById(`product-list-${storeId}`);
+        const productDiv = document.createElement("div");
+        productDiv.className = "product";
+        productDiv.innerHTML = `
+          <h3>${productName}</h3>
+          <p>${productDescription}</p>
+          <p class="price">${productPrice}</p>
+        `;
+        productList.appendChild(productDiv);
+
+        // Ürün formunu temizle
+        document.getElementById(`product-name-${storeId}`).value = "";
+        document.getElementById(`product-description-${storeId}`).value = "";
+        document.getElementById(`product-price-${storeId}`).value = "";
+      } else {
+        alert("Lütfen tüm ürün alanlarını doldurun!");
       }
     }
   </script>
