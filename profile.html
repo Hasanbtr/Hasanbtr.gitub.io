@@ -1,3 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookstore</title>
+    <style>
+        /* CSS kodlarınız burada kalacak */
+    </style>
+</head>
 <body>
     <h1>Bookstore</h1>
     <div class="profile-btn-container">
@@ -17,35 +27,38 @@
     </div>
 
     <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
-    <script>
+    <script type="module">
         // Firebase projesi yapılandırma
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
+        import { getAuth, createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
+
         const firebaseConfig = {
-            apiKey: "AIzaSyA0WNCXuVIMYj-xuMdU3yFUQirvnmzG8Go",
-            authDomain: "astute-window-423510-h6.firebaseapp.com",
-            projectId: "astute-window-423510-h6",
-            storageBucket: "astute-window-423510-h6.appspot.com",
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
             messagingSenderId: "YOUR_SENDER_ID",
-            appId: "astute-window-423510-h6"
+            appId: "YOUR_APP_ID"
         };
 
         // Firebase'i başlat
-        firebase.initializeApp(firebaseConfig);
+        const app = initializeApp(firebaseConfig);
 
         // Authentication referansı
-        const auth = firebase.auth();
+        const auth = getAuth(app);
 
         // Kullanıcı kaydı fonksiyonu
-        function signUp() {
+        window.signUp = function() {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            auth.createUserWithEmailAndPassword(email, password)
+            createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     console.log('User signed up:', userCredential.user);
+                    alert('User signed up successfully');
                 })
                 .catch((error) => {
                     console.error('Error signing up:', error);
+                    alert('Error signing up: ' + error.message);
                 });
         }
     </script>
